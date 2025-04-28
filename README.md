@@ -26,26 +26,26 @@ The application will be accessible at http://localhost:5000.​
 
 # 📁 Project Structure
 
-# ├── app.py
-# ├── detector.py
-# ├── logger.py
-# ├── requirements.txt
-# ├── Dockerfile
-# ├── static/
-# │   └── uploads/
-# ├── templates/
-# │   └── index.html
-# ├── data/
-# │   └── videos/
+### ├── app.py
+### ├── detector.py
+### ├── logger.py
+### ├── requirements.txt
+### ├── Dockerfile
+### ├── static/
+### │   └── uploads/
+### ├── templates/
+### │   └── index.html
+### ├── data/
+### │   └── videos/
 
-# app.py: Main Flask application.
-# detector.py: Contains object detection and tracking logic.
-# logger.py: Handles logging functionalities.
-# requirements.txt: Python dependencies.
-# Dockerfile: Docker configuration.
-# static/uploads/: Directory for uploaded videos.
-# templates/index.html: HTML template for the frontend.
-# data/videos/: Directory for sample videos.​
+### app.py: Main Flask application.
+### detector.py: Contains object detection and tracking logic.
+### logger.py: Handles logging functionalities.
+### requirements.txt: Python dependencies.
+### Dockerfile: Docker configuration.
+### static/uploads/: Directory for uploaded videos.
+### templates/index.html: HTML template for the frontend.
+### data/videos/: Directory for sample videos.​
 
 # 🐳 Docker Commands
 
