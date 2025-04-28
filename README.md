@@ -9,77 +9,60 @@ Live video streaming via Flask.
 Dockerized for seamless deployment.​
 
 # 🛠️ Prerequisites
-Docker installed on your system.
-Basic understanding of command-line operations.​
+1. Docker installed on your system.
+2. Basic understanding of command-line operations.​
 
 # 🚀 Getting Started
 1. Clone the Repository
-bash
-Copy
-Edit
 git clone https://github.com/yourusername/yolov8-object-tracking-flask.git
 cd yolov8-object-tracking-flask
-2. Build the Docker Image
-bash
-Copy
-Edit
+
+3. Build the Docker Image
 docker build -t object-tracker-app .
-3. Run the Docker Container
-bash
-Copy
-Edit
+
+4. Run the Docker Container
 docker run -d -p 5000:5000 --name object-tracker object-tracker-app
 The application will be accessible at http://localhost:5000.​
 
 # 📁 Project Structure
-bash
-Copy
-Edit
-├── app.py
-├── detector.py
-├── logger.py
-├── requirements.txt
-├── Dockerfile
-├── static/
-│   └── uploads/
-├── templates/
-│   └── index.html
-├── data/
-│   └── videos/
 
-app.py: Main Flask application.
-detector.py: Contains object detection and tracking logic.
-logger.py: Handles logging functionalities.
-requirements.txt: Python dependencies.
-Dockerfile: Docker configuration.
-static/uploads/: Directory for uploaded videos.
-templates/index.html: HTML template for the frontend.
-data/videos/: Directory for sample videos.​
+#├── app.py
+#├── detector.py
+#├── logger.py
+#├── requirements.txt
+#├── Dockerfile
+#├── static/
+#│   └── uploads/
+#├── templates/
+#│   └── index.html
+#├── data/
+#│   └── videos/
+
+#app.py: Main Flask application.
+#detector.py: Contains object detection and tracking logic.
+#logger.py: Handles logging functionalities.
+#requirements.txt: Python dependencies.
+#Dockerfile: Docker configuration.
+#static/uploads/: Directory for uploaded videos.
+#templates/index.html: HTML template for the frontend.
+#data/videos/: Directory for sample videos.​
 
 # 🐳 Docker Commands
 
 Stop the Container:
-bash
-Copy
-Edit
+
   docker stop object-tracker
   
 Remove the Container:
-bash
-Copy
-Edit
+
   docker rm object-tracker
   
 View Container Logs:
-bash
-Copy
-Edit
+
   docker logs object-tracker
   
 Access the Container's Shell:
-bash
-Copy
-Edit
+
   docker exec -it object-tracker /bin/bash
   
 # 📝 License
