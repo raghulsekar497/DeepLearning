@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLOv8 Object Counter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #ff0044, #6a0dad);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-attachment: fixed;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 1rem auto;
+            padding: 1rem;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #00bfff;
+            margin-bottom: 2rem;
+        }
+        .top-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background-color: #2d2d44;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+            flex: 1 1 300px;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+            max-width: 100%;
+        }
+        form {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+            width: 100%;
+            box-sizing: border-box; /* Ensures padding and border are part of the element's width */
+        }
+        select, input[type="file"], button {
+            width: 100%; /* Ensures full width inside parent */
+            padding: 0.7rem;
+            margin-top: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #3a3a55;
+            color: white;
+            font-size: 1rem;
+            max-width: 100%; /* Prevents element from expanding beyond parent */
+            box-sizing: border-box; /* Includes padding and border in width calculation */
+        }
+        button {
+            background-color: #00bfff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover {
+            background-color: #009acd;
+        }
+        .video-section {
+            text-align: center;
+            margin-top: 2rem;
+            position: relative;
+        }
+        #video-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 900px;
+        }
+        #live-count-box {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 191, 255, 0.8);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            z-index: 10;
+            display: none;
+        }
+        #video {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 10px;
+            border: 2px solid #00bfff;
+            box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+            display: block;
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #00bfff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading {
+            display: block;
+        }
+        .hidden {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                align-items: center;
+            }
+            .card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 YOLOv8 Object Counter</h1>
+
+        <!-- Top bar with options -->
+        <div class="top-bar">
+            <div class="card">
+                <h3>📤 Upload Video</h3>
+                <form method="POST" action="/upload" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="file" name="video" accept=".mp4" required>
+                    </div>
+                    <button type="submit">Upload & Analyze</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>🎬 Select Video</h3>
+                <form method="POST" action="/select_video">
+                    <div class="form-group">
+                        <select name="selected_video" required>
+                            {% for video in videos %}
+                                <option value="{{ video }}">{{ video.split('/')[-1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit">Play Video</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>🎥 Live Camera</h3>
+                <form method="POST" action="/camera">
+                    <button type="submit">Use Camera</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Video section -->
+        <div class="video-section">
+            <div id="video-container">
+                <div id="live-count-box">
+                    Count: <span id="live-count">0</span>
+                </div>
+                <!-- Loading Spinner -->
+                <div id="loader" class="loader loading"></div>
+                <img id="video" class="hidden" alt="Video Feed">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update video feed
+        const videoElement = document.getElementById("video");
+        const loader = document.getElementById("loader");
+        const liveCountBox = document.getElementById("live-count-box");
+
+        videoElement.src = "{{ url_for('video_feed') }}" + "?" + new Date().getTime();
+        videoElement.onload = function() {
+            loader.classList.add("hidden");
+            videoElement.classList.remove("hidden");
+            liveCountBox.style.display = "block";
+        }
+
+        // Function to update object count
+        function updateCount() {
+            fetch('/object_count')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('live-count').textContent = data.total;
+                });
+        }
+
+        // Update object count every second
+        setInterval(updateCount, 1000);
+    </script>
+</body>
+</html>
