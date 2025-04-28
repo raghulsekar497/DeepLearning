@@ -39,6 +39,7 @@ The application will be accessible at http://localhost:5000.​
 ### ├── data/
 ###     └── videos/
 
+
 ### app.py: Main Flask application.
 ### detector.py: Contains object detection and tracking logic.
 ### logger.py: Handles logging functionalities.
