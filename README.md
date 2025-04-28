@@ -32,11 +32,12 @@ The application will be accessible at http://localhost:5000.​
 ### ├── requirements.txt
 ### ├── Dockerfile
 ### ├── static/
-### │   └── uploads/
+###     └── uploads/
+###     └── logs/
 ### ├── templates/
-### │   └── index.html
+###     └── index.html
 ### ├── data/
-### │   └── videos/
+###     └── videos/
 
 ### app.py: Main Flask application.
 ### detector.py: Contains object detection and tracking logic.
